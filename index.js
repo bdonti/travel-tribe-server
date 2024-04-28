@@ -26,6 +26,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const touristSpotCollection = client.db('tourismDB').collection('spots');
+    const countryCollection = client.db('tourismDB').collection('countries');
 
     app.get('/spots', async(req, res) =>{
         const cursor = touristSpotCollection.find();
@@ -77,6 +78,16 @@ async function run() {
       const result = await touristSpotCollection.deleteOne(query);
       res.send(result);
     })
+
+    app.get('/countries', async(req, res) =>{
+      const cursor = countryCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    // app.get('/spots-by-country/:countryName', async (req, res)  => {
+      
+    // })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
