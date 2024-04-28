@@ -11,7 +11,7 @@ app.use(express.json());
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.iedqjux.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -40,11 +40,34 @@ async function run() {
         res.send(result);
       })
 
+
     app.post('/spots', async (req, res) => {
         const newTouristSpot = req.body;
         console.log(newTouristSpot);
         const result = await touristSpotCollection.insertOne(newTouristSpot);
         res.send(result);
+    })
+
+    app.put('/spots/:id', async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = {upsert : true};
+      const updatedTouristSpot = req.body;
+      const spot ={
+        $set: {
+        url: updatedTouristSpot.url,
+        touristsSpotName: updatedTouristSpot.touristsSpotName,
+        countryName: updatedTouristSpot.countryName,
+        location: updatedTouristSpot.location,
+        description: updatedTouristSpot.description,
+        averageCost: updatedTouristSpot.averageCost,
+        season: updatedTouristSpot.season,
+        travelTime: updatedTouristSpot.travelTime,
+        totalVisitors: updatedTouristSpot.totalVisitors,
+        }
+      }
+      const result = await coffeeCollection.updateOne(filter, spot, options);
+      res.send(result);
     })
 
     // Send a ping to confirm a successful connection
