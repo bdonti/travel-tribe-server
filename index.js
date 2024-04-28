@@ -85,9 +85,20 @@ async function run() {
       res.send(result);
     })
 
-    // app.get('/spots-by-country/:countryName', async (req, res)  => {
-      
-    // })
+    app.get('/spots-by-country/:countryName', async (req, res)  => {
+      const countryName = req.params.countryName;
+
+      const spots = await touristSpotCollection.find({ countryName: countryName }).toArray();
+
+      const country = await countryCollection.findOne({ countryName: countryName });
+
+      let result = {
+        country: country,
+        spots: spots
+    };
+
+    res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
