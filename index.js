@@ -66,7 +66,7 @@ async function run() {
         totalVisitors: updatedTouristSpot.totalVisitors,
         }
       }
-      const result = await coffeeCollection.updateOne(filter, spot, options);
+      const result = await touristSpotCollection.updateOne(filter, spot, options);
       res.send(result);
     })
 
